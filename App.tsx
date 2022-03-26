@@ -1,7 +1,8 @@
 import { StyleSheet, View, Dimensions, Alert } from "react-native";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import * as React from "react";
 import MapView, { Marker } from "react-native-maps";
+import * as Location from "expo-location";
 import AddButton from "./MainMap/AddButton";
 
 const defaultMarkers = [
@@ -11,16 +12,38 @@ const defaultMarkers = [
 
 export default function App(this: any) {
    const [markers, setMarkers] = useState(defaultMarkers);
-   const [isMain, setIsMain] = useState(true);
+   const [route, setRoute] = useState("main");
+   const [currentCoords, setCurrentCoords] = useState<{
+      latitude: number | null;
+      longitude: number | null;
+   }>({ latitude: null, longitude: null });
 
-   if (isMain) {
+   useEffect(() => {
+      (async () => {
+         let { status } = await Location.requestForegroundPermissionsAsync();
+         if (status !== "granted") {
+            console.log("Permission to access location was denied");
+         }
+         let location = await Location.getCurrentPositionAsync({
+            accuracy: Location.Accuracy.Highest,
+         });
+         const { latitude, longitude } = location.coords;
+         setCurrentCoords({ latitude: latitude, longitude: longitude });
+      })();
+   }, []);
+
+   if (
+      route === "main" &&
+      currentCoords.latitude !== null &&
+      currentCoords.longitude !== null
+   ) {
       return (
          <View style={styles.container}>
             <MapView
                style={styles.map}
                initialRegion={{
-                  latitude: 49.2827,
-                  longitude: -123.1207,
+                  latitude: currentCoords.latitude,
+                  longitude: currentCoords.longitude,
                   latitudeDelta: 0.0922,
                   longitudeDelta: 0.0421,
                }}
@@ -41,25 +64,27 @@ export default function App(this: any) {
             <View style={styles.buttonContainer}>
                <AddButton
                   onPress={() => {
-                     setIsMain(!isMain);
+                     setRoute("form");
                   }}
                   title={"Add"}
                />
             </View>
          </View>
       );
+   } else if (route === "form") {
+      return (
+         <View style={styles.container}>
+            <AddButton
+               onPress={() => {
+                  setRoute("main");
+               }}
+               title={"Go Back"}
+            />
+         </View>
+      );
    }
 
-   return (
-      <View style={styles.container}>
-         <AddButton
-            onPress={() => {
-               setIsMain(!isMain);
-            }}
-            title={"Go Back"}
-         />
-      </View>
-   );
+   return <View />;
 }
 
 const styles = StyleSheet.create({
