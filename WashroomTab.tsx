@@ -1,16 +1,21 @@
-import { StyleSheet, View, Dimensions, Text } from "react-native";
+import { StyleSheet, View, Dimensions, Text, TouchableOpacity } from "react-native";
 import * as React from "react";
 import { Rating } from "react-native-ratings";
-import { ScrollView } from "react-native-gesture-handler";
+import { ScrollView, TextInput } from "react-native-gesture-handler";
 import Review from "./Review";
 
 interface WashroomTabProps {
    title: string;
    address: string;
-   reviews: string[];
+   reviews: [];
+   avg_ratings: number;
 }
 
-function WashroomTab({ title, address, reviews }: WashroomTabProps) {
+function postReview(toAdd: any) {
+
+}
+
+function WashroomTab({ title, address, reviews, avg_ratings }: WashroomTabProps) {
    return (
       <ScrollView contentContainerStyle={styles.scrollview}>
          <Text style={[styles.scrollviewinner, { fontSize: 24 }]}>{title}</Text>
@@ -28,6 +33,7 @@ function WashroomTab({ title, address, reviews }: WashroomTabProps) {
             <Rating
                type="star"
                ratingCount={5}
+               startingValue={avg_ratings}
                imageSize={20}
                readonly={true}
                style={{ marginLeft: 10, marginRight: 10 }}
@@ -60,6 +66,7 @@ function WashroomTab({ title, address, reviews }: WashroomTabProps) {
          </Text>
          <Rating
             type="star"
+            startingValue={0}
             ratingCount={5}
             imageSize={30}
             style={[
@@ -67,11 +74,24 @@ function WashroomTab({ title, address, reviews }: WashroomTabProps) {
                { marginLeft: 10, marginRight: 10 },
             ]}
          ></Rating>
+         <TextInput style={[styles.scrollviewinner, { fontSize: 14, borderWidth: 1, margin: 12, padding: 10 }]}
+            placeholder="Any comments?"
+            multiline={true}
+         ></TextInput>
+         <TouchableOpacity style={[styles.button, {alignItems: "center",
+               backgroundColor: "#DDDDDD",
+            padding: 10
+            }]}
+            onPress={() => postReview({})}>
+            <Text>
+               Submit!
+            </Text>
+         </TouchableOpacity>
          <Text style={[styles.scrollviewinner, { fontSize: 20 }]}>
             What other people say
          </Text>
-         {reviews.map((review: string, index: number) => (
-            <Review key={index} description={review}></Review>
+         {reviews.map((review: any, index: number) => (
+            <Review key={index} rating={review.rating} description={review.comment}></Review>
          ))}
       </ScrollView>
    );
@@ -115,6 +135,12 @@ const styles = StyleSheet.create({
       flexDirection: "row",
       justifyContent: "flex-start",
    },
+   input: {
+      height: 40,
+      margin: 12,
+      borderWidth: 1,
+      padding: 10,
+    }
 });
 
 export default WashroomTab;

@@ -3,10 +3,11 @@ import * as React from "react";
 import { Rating } from "react-native-ratings";
 
 interface ReviewProps {
+   rating: number;
    description: string;
 }
 
-function Review({ description }: ReviewProps) {
+function Review({ rating, description }: ReviewProps) {
    return (
       <View style={styles.review}>
          <Text style={styles.scrollviewinner}>Anonymous User</Text>
@@ -27,7 +28,7 @@ function Review({ description }: ReviewProps) {
                imageSize={20}
                readonly={true}
                ratingBackgroundColor="#fff"
-               tintColor="#fff"
+               startingValue={rating}
             ></Rating>
          </View>
          <View style={styles.scrollviewinner}>
