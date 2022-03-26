@@ -7,6 +7,7 @@ import BottomSheet from "react-native-gesture-bottom-sheet";
 import * as Location from "expo-location";
 import AddButton from "./MainMap/AddButton";
 import WashroomTab from "./WashroomTab";
+import Form from "./Form/Form";
 
 const defaultWashrooms = [
    {
@@ -39,6 +40,18 @@ export default function App(this: any) {
 
    const [washrooms, setWashrooms] = useState(defaultWashrooms);
    const [currentWashroom, setCurrentWashroom] = useState(defaultWashrooms[0]);
+
+   const addWashroom = (title: string, latitude: string, longitude: string) => {
+      defaultWashrooms.push({
+         title: title,
+         address: "",
+         reviews: [],
+         coordinates: {
+            latitude: parseFloat(latitude),
+            longitude: parseFloat(longitude),
+         },
+      });
+   };
 
    useEffect(() => {
       (async () => {
@@ -110,11 +123,11 @@ export default function App(this: any) {
    } else if (route === "form") {
       return (
          <View style={styles.container}>
-            <AddButton
-               onPress={() => {
+            <Form
+               onAdd={addWashroom}
+               onExit={() => {
                   setRoute("main");
                }}
-               title={"Go Back"}
             />
          </View>
       );
