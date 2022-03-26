@@ -86,52 +86,52 @@ export default class Server {
 	private registerRoutes() {
 		// This is an example endpoint this you can invoke by accessing this URL in your browser:
 		// http://localhost:4322/echo/hello
-		this.express.get("/echo/:msg", Server.echo);
-		// url, 		// function
-		// when got this, call the following function
-		// TODO: your other endpoints should go here
-
-		// this.express.put("/dataset/:id/:kind", Server.datasetPut); // PUT /dataset/:id/:kind
-		// this.express.delete("/dataset/:id", Server.datasetDelete); // DELETE /dataset/:id
-		// this.express.post("/query", Server.datasetPost); // POST /query
-		this.express.get("/nearestWashroom/", Server.nearestWashroom); // GET /datasets
+		this.express.put("/addWashroom", Server.addWashroom);
+		this.express.post("/addReview", Server.addReview);
+		this.express.post("/SearchWashRoom", Server.SearchWashRoom);
+		// this.express.get("/nearestWashroom", Server.nearestWashroom);
 	}
-
-	// ==========================================================================================
-
-	// The next two methods handle the echo service.
-	// These are almost certainly not the best place to put these, but are here for your reference.
-	// By updating the Server.echo function pointer above, these methods can be easily moved.
-	private static echo(req: Request, res: Response) {
+	// ===================================================================
+	// 1.put: washroom in, void out
+	private static async addWashroom(req: Request, res: Response) {
 		try {
-			console.log(`Server::echo(..) - params: ${JSON.stringify(req.params)}`);
-			const response = Server.performEcho(req.params.msg);
+			const response = await Server.performAddWashroom(req.body);
 			res.status(200).json({result: response});
 		} catch (err) {
 			res.status(400).json({error: err});
 		}
 	}
 
-	// almost equivalent to calling addDataset
-	private static performEcho(msg: string): string {
-		if (typeof msg !== "undefined" && msg !== null) {
-			return `${msg}...${msg}`;
-		} else {
-			return "Message not provided";
+	private static performAddWashroom(washroom: any) {
+		return washRoomApp.addWashroom(washroom);
+	}
+	// ============================================================================
+	// 2.post: inputReview object in, same washroom out
+	private static addReview(req: Request, res: Response) {
+		try {
+			const response = Server.performAddReview(req.body);
+			res.status(200).json({result: response});
+		} catch (err) {
+			res.status(400).json({error: err});
 		}
+	}
+
+	private static performAddReview(inputReview: any): any {
+		return washRoomApp.addReview(inputReview);
 	}
 	// ==========================================================================
-	private static nearestWashroom(req: Request, res: Response) {
+	// 3.post 3-1. button pressed, search matching washroom, return the washroom, shows up the closest 3
+	//        3-2. get: return the closest washroom
+	private static SearchWashRoom(req: Request, res: Response) {
 		try {
-			const response = Server.performNearestWashroom(req.body);
+			const response = Server.performSearchWashRoom(req.body);
 			res.status(200).json({result: response});
 		} catch (err) {
 			res.status(400).json({error: err});
 		}
 	}
 
-	// almost equivalent to calling addDataset
-	private static performNearestWashroom(currLocation: any): any {
-		return washRoomApp.getNearestWashroom(currLocation);
+	private static performSearchWashRoom(currWashRoom: any): any {
+		return washRoomApp.searchWashroom(currWashRoom);
 	}
 }
