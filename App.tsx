@@ -9,18 +9,41 @@ import AddButton from "./MainMap/AddButton";
 import WashroomTab from "./WashroomTab";
 
 const defaultMarkers = [
-   { latitude: 49.2827, longitude: -123.1207 },
-   { latitude: 49.4, longitude: -123.15 },
+   { latitude: 49.2614, longitude: -123.2489 },
+   { latitude: 49.27, longitude: -123.3 },
+];
+
+const defaultWashrooms = [
+   {
+      title: "The ICICS Building Washroom",
+      address: "ICICS Building Third Floor",
+      reviews: ["lol this bathroom stinks", "yeah not good", "dang the smell"],
+      coordinates: { latitude: 49.2614, longitude: -123.2489 },
+   },
+   {
+      title: "The Middle Of The Ocean",
+      address: "Pacific Ocean",
+      reviews: ["It's a bit wet out here", "refreshing"],
+      coordinates: { latitude: 49.26, longitude: -123.272 },
+   },
+   {
+      title: "The Nest",
+      address: "6133 University Blvd, Vancouver",
+      reviews: ["Not enough washrooms -Jack, 2022"],
+      coordinates: { latitude: 49.2667, longitude: -123.25 },
+   },
 ];
 
 export default function App(this: any) {
    const bottomSheet = useRef();
-   const [markers, setMarkers] = useState(defaultMarkers);
    const [route, setRoute] = useState("main");
    const [currentCoords, setCurrentCoords] = useState<{
       latitude: number | null;
       longitude: number | null;
    }>({ latitude: null, longitude: null });
+
+   const [washrooms, setWashrooms] = useState(defaultWashrooms);
+   const [currentWashroom, setCurrentWashroom] = useState(defaultWashrooms[0]);
 
    useEffect(() => {
       (async () => {
@@ -52,14 +75,15 @@ export default function App(this: any) {
                   longitudeDelta: 0.0421,
                }}
             >
-               {markers.map((marker, index) => (
+               {washrooms.map((washroom, index) => (
                   <Marker
                      key={index}
                      coordinate={{
-                        latitude: marker.latitude,
-                        longitude: marker.longitude,
+                        latitude: washroom.coordinates.latitude,
+                        longitude: washroom.coordinates.longitude,
                      }}
                      onPress={(e) => {
+                        setCurrentWashroom(washrooms[index]);
                         bottomSheet.current.show();
                      }}
                   />
@@ -73,13 +97,9 @@ export default function App(this: any) {
                sheetBackgroundColor="#fff"
             >
                <WashroomTab
-                  title="The ICICS Building Washroom"
-                  address="ICICS Building Third Floor"
-                  reviews={[
-                     "lol this bathroom stinks",
-                     "yeah not good",
-                     "dang the smell",
-                  ]}
+                  title={currentWashroom.title}
+                  address={currentWashroom.address}
+                  reviews={currentWashroom.reviews}
                ></WashroomTab>
             </BottomSheet>
             <View style={styles.buttonContainer}>
