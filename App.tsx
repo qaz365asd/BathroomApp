@@ -8,11 +8,6 @@ import * as Location from "expo-location";
 import AddButton from "./MainMap/AddButton";
 import WashroomTab from "./WashroomTab";
 
-const defaultMarkers = [
-   { latitude: 49.2614, longitude: -123.2489 },
-   { latitude: 49.27, longitude: -123.3 },
-];
-
 const defaultWashrooms = [
    {
       title: "The ICICS Building Washroom",
