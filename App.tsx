@@ -12,19 +12,23 @@ const defaultWashrooms = [
    {
       title: "The ICICS Building Washroom",
       address: "ICICS Building Third Floor",
-      reviews: ["lol this bathroom stinks", "yeah not good", "dang the smell"],
+      reviews: [{ rating: 1, comment: "lol this bathroom stinks" },
+         { rating: 2, comment: "yeah not good" }, { rating: 5, comment: "dang the smell" }],
+      avg_ratings: 3.5,
       coordinates: { latitude: 49.2614, longitude: -123.2489 },
    },
    {
       title: "The Middle Of The Ocean",
       address: "Pacific Ocean",
-      reviews: ["It's a bit wet out here", "refreshing"],
+      reviews: [{ rating: 3, comment: "It's a bit wet out here" }, { rating: 5, comment: "refreshing" }],
+      avg_ratings: 4,
       coordinates: { latitude: 49.26, longitude: -123.272 },
    },
    {
       title: "The Nest",
       address: "6133 University Blvd, Vancouver",
-      reviews: ["Not enough washrooms -Jack, 2022"],
+      reviews: [{ rating: 0, comment: "Not enough washrooms -Jack, 2022" }],
+      avg_ratings: 0,
       coordinates: { latitude: 49.2667, longitude: -123.25 },
    },
 ];
@@ -95,6 +99,7 @@ export default function App(this: any) {
                   title={currentWashroom.title}
                   address={currentWashroom.address}
                   reviews={currentWashroom.reviews}
+                  avg_ratings={currentWashroom.avg_ratings}
                ></WashroomTab>
             </BottomSheet>
             <View style={styles.buttonContainer}>
