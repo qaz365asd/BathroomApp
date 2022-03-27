@@ -3,6 +3,7 @@ import * as React from "react";
 import { Rating } from "react-native-ratings";
 import { ScrollView, TextInput } from "react-native-gesture-handler";
 import Review from "./Review";
+import { useState } from "react";
 
 interface WashroomTabProps {
    title: string;
@@ -12,10 +13,21 @@ interface WashroomTabProps {
 }
 
 function postReview(toAdd: any) {
-
+   console.log(toAdd)
+   const review = { toAdd }
+   fetch("http://128.189.128.218:4322/addReview/", {
+         method: "POST",
+         headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+         },
+         body: JSON.stringify(review),
+   });
 }
 
 function WashroomTab({ title, address, reviews, avg_ratings }: WashroomTabProps) {
+   const [ratingToSent, setratingToSent] = useState(-1);
+   const [commentToSent, setcommentToSent] = useState("");
    return (
       <ScrollView contentContainerStyle={styles.scrollview}>
          <Text style={[styles.scrollviewinner, { fontSize: 24 }]}>{title}</Text>
@@ -73,16 +85,23 @@ function WashroomTab({ title, address, reviews, avg_ratings }: WashroomTabProps)
                styles.scrollviewinner,
                { marginLeft: 10, marginRight: 10 },
             ]}
+            onFinishRating={(rating: number) => setratingToSent(rating)}
          ></Rating>
          <TextInput style={[styles.scrollviewinner, { fontSize: 14, borderWidth: 1, margin: 12, padding: 10 }]}
             placeholder="Any comments?"
             multiline={true}
+            onChangeText={(value) => setcommentToSent(value)}
+            value={commentToSent}
          ></TextInput>
          <TouchableOpacity style={[styles.button, {alignItems: "center",
                backgroundColor: "#DDDDDD",
             padding: 10
             }]}
-            onPress={() => postReview({})}>
+            onPress={() => postReview({
+               comment: commentToSent,
+               rating: ratingToSent,
+               title: title,
+            })}>
             <Text>
                Submit!
             </Text>
