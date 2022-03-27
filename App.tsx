@@ -7,20 +7,27 @@ import BottomSheet from "react-native-gesture-bottom-sheet";
 import * as Location from "expo-location";
 import AddButton from "./MainMap/AddButton";
 import WashroomTab from "./WashroomTab";
+import Form from "./Form/Form";
 
 const defaultWashrooms = [
    {
       title: "The ICICS Building Washroom",
       address: "ICICS Building Third Floor",
-      reviews: [{ rating: 1, comment: "lol this bathroom stinks" },
-         { rating: 2, comment: "yeah not good" }, { rating: 5, comment: "dang the smell" }],
+      reviews: [
+         { rating: 1, comment: "lol this bathroom stinks" },
+         { rating: 2, comment: "yeah not good" },
+         { rating: 5, comment: "dang the smell" },
+      ],
       avg_ratings: 3.5,
       coordinates: { latitude: 49.2614, longitude: -123.2489 },
    },
    {
       title: "The Middle Of The Ocean",
       address: "Pacific Ocean",
-      reviews: [{ rating: 3, comment: "It's a bit wet out here" }, { rating: 5, comment: "refreshing" }],
+      reviews: [
+         { rating: 3, comment: "It's a bit wet out here" },
+         { rating: 5, comment: "refreshing" },
+      ],
       avg_ratings: 4,
       coordinates: { latitude: 49.26, longitude: -123.272 },
    },
@@ -43,6 +50,62 @@ export default function App(this: any) {
 
    const [washrooms, setWashrooms] = useState(defaultWashrooms);
    const [currentWashroom, setCurrentWashroom] = useState(defaultWashrooms[0]);
+
+   const getWashrooms = () => {
+      fetch("http://128.189.128.218:4322/getWashroom", {
+         method: "GET",
+         headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+         },
+      })
+         .then((response) => response.json())
+         .then((json) => {
+            const newWashrooms = defaultWashrooms;
+            const objects = json.result;
+
+            objects.forEach((object: { washroom: any }) => {
+               newWashrooms.push(object.washroom);
+            });
+            console.log(objects);
+         })
+         .catch((error) => {
+            console.error(error);
+         });
+   };
+   getWashrooms();
+
+   const addWashroom = (title: string, latitude: string, longitude: string) => {
+      defaultWashrooms.push({
+         title: title,
+         coordinates: {
+            latitude: parseFloat(latitude),
+            longitude: parseFloat(longitude),
+         },
+         address: "",
+         reviews: [],
+         avg_ratings: 0,
+      });
+
+      const washroom = {
+         title: title,
+         coordinates: {
+            latitude: parseFloat(latitude),
+            longitude: parseFloat(longitude),
+         },
+         reviews: [],
+         avr_ratings: 0,
+      };
+
+      fetch("http://128.189.128.218:4322/addWashroom", {
+         method: "PUT",
+         headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+         },
+         body: JSON.stringify({ washroom }),
+      });
+   };
 
    useEffect(() => {
       (async () => {
@@ -115,11 +178,11 @@ export default function App(this: any) {
    } else if (route === "form") {
       return (
          <View style={styles.container}>
-            <AddButton
-               onPress={() => {
+            <Form
+               onAdd={addWashroom}
+               onExit={() => {
                   setRoute("main");
                }}
-               title={"Go Back"}
             />
          </View>
       );
