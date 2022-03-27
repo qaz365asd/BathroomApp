@@ -97,8 +97,6 @@ export default function App(this: any) {
          avr_ratings: 0,
       };
 
-      console.log(JSON.stringify(washroom));
-
       fetch("http://128.189.128.218:4322/addWashroom", {
          method: "PUT",
          headers: {
