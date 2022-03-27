@@ -14,7 +14,7 @@ export class WashroomApp {
     // review object: {
     //      rating: number,
     //      comments: string
-    //      }
+    // }
 
     // inputReview object: {
     //      title: string,
@@ -33,7 +33,6 @@ export class WashroomApp {
 
     // 1.put: washroom in, void out
     public addWashroom(washroom: object) {
-        // @ts-ignore
         this.listOfWashrooms.push(washroom);
     }
 
@@ -55,27 +54,19 @@ export class WashroomApp {
         return washroomInSearch;
     }
 
-    public addWashroomReview(washroom: any, review: any) {
-        washroom["reviews"].push(review);
-    }
-
-    public getWashroomReview(washroom: any): String {
-        return washroom["reviews"];
-    }
-
-    getNearestWashroom(currLocation: any):any {
-        let minDistance = 0;
-        let closestWashroom: any;
-
-        for (let washroom in this.getWashrooms()) {
-            let distance = this.distanceCalculator(currLocation, washroom);
-            if (distance < minDistance) {
-                minDistance = distance;
-                closestWashroom = washroom;
-            }
-        }
-        return closestWashroom;
-    }
+    // getNearestWashroom(currLocation: any):any {
+    //     let minDistance = 0;
+    //     let closestWashroom: any;
+    //
+    //     for (let washroom in this.getWashrooms()) {
+    //         let distance = this.distanceCalculator(currLocation, washroom);
+    //         if (distance < minDistance) {
+    //             minDistance = distance;
+    //             closestWashroom = washroom;
+    //         }
+    //     }
+    //     return closestWashroom;
+    // }
 
     // takes an inputted coordinates & washroom coordinates, calculate the distance
     public distanceCalculator(currLocation: any, washroom: any): number {
@@ -92,5 +83,10 @@ export class WashroomApp {
         };
         matchingWashroom["reviews"].push(review);
         return matchingWashroom;
+    }
+
+    deleteWashrooms(): String {
+        this.listOfWashrooms = [];
+        return "success";
     }
 }
