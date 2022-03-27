@@ -15,6 +15,7 @@
     "expo-location": "~14.0.1",
     "expo-permissions": "~13.1.0",
     "expo-status-bar": "~1.2.0",
+    "express": "^4.17.3",
     "react": "17.0.1",
     "react-dom": "17.0.1",
     "react-native": "0.64.3",
@@ -28,9 +29,23 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
+    "@types/cors": "^2.8.12",
+    "@types/express": "^4.17.13",
     "@types/react": "~17.0.21",
     "@types/react-native": "~0.64.12",
-    "typescript": "~4.3.5"
+    "cors": "^2.8.5",
+    "typescript": "~4.3.5",
+    "ts-node": "10.4.0"
+  },
+  "scripts": {
+    "postinstall": "git config core.hooksPath .githooks",
+    "cover": "nyc --reporter text --reporter html yarn run test",
+    "build": "tsc && yarn lint",
+    "test": "mocha --require ts-node/register --timeout 10000 --extension .spec.ts --recursive test",
+    "pretty": "prettier --config ./.prettierrc.json --write \"./**/*.ts\"",
+    "lint": "eslint src test --ext .ts",
+    "fix": "yarn lint --fix",
+    "start": "ts-node src/App.ts"
   },
   "private": true
 }
